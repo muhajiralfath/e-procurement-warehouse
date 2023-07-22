@@ -13,17 +13,17 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
-@Table(name = "m_storage")
-public class Storage {
+@Table(name = "m_super_admin")
+public class SuperAdmin {
     @Id
     @GenericGenerator(strategy = "uuid2", name = "system-uuid")
     @GeneratedValue(generator = "system-uuid")
     private String id;
 
-    @OneToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @Column(name = "email", unique = true)
+    private String email;
 
-    @Column(name = "stock")
-    private Integer stock;
+    @OneToOne
+    @JoinColumn(name = "user_credential_id")
+    private UserCredential userCredential;
 }
