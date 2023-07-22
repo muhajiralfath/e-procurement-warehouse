@@ -16,9 +16,9 @@ public class VendorServiceImpl implements VendorService {
     private final VendorRepository vendorRepository;
 
     @Override
-    public Vendor save(Vendor vendor) {
-        return null;
-    }
+    public Vendor create(Vendor vendor) {
+        return vendorRepository.save(vendor);
+    } 
 
     @Override
     public Vendor getById(String id) {
@@ -41,7 +41,7 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public void softdelete(String id) {
+    public void softDelete(String id) {
 
     }
 }

@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface VendorService {
 
-    Vendor save(Vendor vendor);
+    Vendor create(Vendor vendor);
     Vendor getById(String id);
     Page<Vendor> getAllVendor();
     VendorResponse update(UpdateVendoreRequest request);
-    void softdelete(String id);
+    void softDelete(String id);
     void delete(String id);
 
 }
