@@ -10,6 +10,5 @@ public class VendorResponse {
     private String id;
     private String name;
     private String address;
-
-    private String mobilePhone;
+    private String phone;
 }

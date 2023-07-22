@@ -11,7 +11,7 @@ public interface VendorService {
 
     Vendor create(Vendor vendor);
     Vendor getById(String id);
-    Page<Vendor> getAllVendor();
+    Page<Vendor> getAllVendor(Integer page, Integer size);
     VendorResponse update(UpdateVendoreRequest request);
     void softDelete(String id);
     void delete(String id);

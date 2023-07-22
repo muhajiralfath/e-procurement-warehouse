@@ -27,6 +27,9 @@ public class Vendor {
     @Column(name = "phone",unique = true)
     private String phone;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "is_active")
     private Boolean isActive;
 
