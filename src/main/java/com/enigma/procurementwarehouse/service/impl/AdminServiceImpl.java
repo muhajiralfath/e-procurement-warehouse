@@ -22,4 +22,14 @@ public class AdminServiceImpl implements AdminService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "username already exist");
         }
     }
+
+    @Override
+    public void deleteAdmin(String id) {
+        try {
+            adminRepository.findById(id);
+            adminRepository.deleteById(id);
+        } catch (DataIntegrityViolationException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "id admin not found");
+        }
+    }
 }
