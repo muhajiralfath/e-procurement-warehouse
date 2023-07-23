@@ -55,8 +55,11 @@ public class AuthServiceImpl implements AuthService {
                     .build();
             userCredentialRepository.saveAndFlush(credential);
 
+            String adminName = request.getEmail().split("@")[0];
+
             Admin admin = Admin.builder()
                     .email(request.getEmail())
+                    .name(adminName)
                     .userCredential(credential)
                     .build();
             adminService.create(admin);

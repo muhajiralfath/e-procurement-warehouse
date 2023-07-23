@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.Date;
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "m_vendor")
+@EntityListeners(AuditingEntityListener.class)
 public class Vendor {
     @Id
     @GenericGenerator(strategy = "uuid2", name = "system-uuid")
@@ -33,9 +35,6 @@ public class Vendor {
 
     @Column(name = "address")
     private String address;
-
-    @Column(name = "is_deleted")
-    private Boolean isDelete;
 
     @Column(name = "created_at")
     @CreatedDate
