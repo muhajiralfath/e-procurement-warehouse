@@ -32,7 +32,7 @@ public class Product {
     private String productCode;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isDeleted;
 
     @Column(name = "created_at")
     private Date createdAt;

@@ -20,6 +20,9 @@ public class ProductRequest {
     @NotBlank(message = "product name is required")
     private String productName;
 
+    @NotBlank(message = "category is required")
+    private String categoryId;
+
     @NotNull(message = "price is required")
     @Min(value = 0, message = "price must be greater than equal 0")
     private Long price;

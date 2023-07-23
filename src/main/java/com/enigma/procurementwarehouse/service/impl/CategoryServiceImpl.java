@@ -33,4 +33,10 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "id admin not found");
         }
     }
+
+    @Override
+    public Category findById(String id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vendor not found"));
+    }
 }

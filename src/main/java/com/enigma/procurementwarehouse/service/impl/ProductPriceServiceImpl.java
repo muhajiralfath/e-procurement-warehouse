@@ -31,4 +31,11 @@ public class ProductPriceServiceImpl implements ProductPriceService {
     public ProductPrice findProductPriceActive(String productId, Boolean active) {
         return productPriceRepository.findByProduct_IdAndIsActive(productId, active).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found"));
     }
+
+    @Override
+    public void hardDelete(String id) {
+        getById(id);
+        productPriceRepository.deleteById(id);
+    }
+
 }

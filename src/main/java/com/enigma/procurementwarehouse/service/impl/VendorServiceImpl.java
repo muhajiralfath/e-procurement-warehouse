@@ -80,7 +80,7 @@ public class VendorServiceImpl implements VendorService {
     public void softDelete(String id) {
         try {
             Vendor vendor = getById(id);
-            vendor.setIsActive(false);
+            vendor.setIsDelete(true);
             vendorRepository.save(vendor);
         } catch (DataIntegrityViolationException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Data vendor not found");

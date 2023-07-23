@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
-@Table(name = "m_storage")
+@Table(name = "t_storage")
 public class Storage {
     @Id
     @GenericGenerator(strategy = "uuid2", name = "system-uuid")
@@ -26,4 +27,16 @@ public class Storage {
 
     @Column(name = "stock")
     private Integer stock;
+
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "updated_by")
+    private String updatedBy;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
 }
