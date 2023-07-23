@@ -6,7 +6,6 @@ import org.springframework.web.server.ResponseStatusException;
 public enum ERole {
 
     ROLE_ADMIN,
-    ROLE_VENDOR,
     ROLE_SUPER_ADMIN;
 
     public static ERole get(String value) {
