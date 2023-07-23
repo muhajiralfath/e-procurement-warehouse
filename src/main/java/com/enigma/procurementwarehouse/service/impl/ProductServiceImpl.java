@@ -51,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
                 .name(request.getProductName())
                 .productCode(productCode)
                 .category(category)
+                .isDeleted(false)
                 .build();
         productRepository.saveAndFlush(product);
 

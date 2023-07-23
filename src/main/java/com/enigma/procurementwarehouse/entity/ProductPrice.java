@@ -4,6 +4,10 @@ package com.enigma.procurementwarehouse.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -41,14 +45,18 @@ public class ProductPrice {
     private Boolean isActive;
 
     @Column(name = "created_at")
+    @CreatedDate
     private Date createdAt;
 
     @Column(name = "created_by")
+    @CreatedBy
     private String createdBy;
 
     @Column(name = "updated_by")
+    @LastModifiedBy
     private String updatedBy;
 
     @Column(name = "updated_at")
+    @LastModifiedDate
     private Date updatedAt;
 }

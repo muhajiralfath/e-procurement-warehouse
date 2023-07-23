@@ -1,8 +1,14 @@
 package com.enigma.procurementwarehouse.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -34,16 +40,20 @@ public class Product {
     @Column(name = "is_active")
     private Boolean isDeleted;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
+    @CreatedDate
     private Date createdAt;
 
     @Column(name = "created_by")
+    @CreatedBy
     private String createdBy;
 
     @Column(name = "updated_by")
+    @LastModifiedDate
     private String updatedBy;
 
     @Column(name = "updated_at")
+    @LastModifiedDate
     private Date updatedAt;
 
     @OneToMany(mappedBy = "product")
