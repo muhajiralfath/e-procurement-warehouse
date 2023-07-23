@@ -35,10 +35,10 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackOn = Exception.class)
     @Override
     public OrderResponse createNewTransaction(OrderRequest request) {
-        // TODO 1: Validate vendor
+        // TODO : Validate vendor
         Vendor vendor = vendorService.getById(request.getVendorId());
 
-        // TODO 2: Convert orderDetailRequest to orderDetail
+        // TODO : Convert orderDetailRequest to orderDetail
         List<OrderDetail> orderDetails = request.getOrderDetails().stream().map(orderDetailRequest -> {
             // TODO 3: Validate Product Price
             ProductPrice productPrice = productPriceService.getById(orderDetailRequest.getProductPriceId());
@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
                     .build();
         }).collect(Collectors.toList());
 
-        // TODO 4: Create new order
+        // TODO : Create new order
         Order order = Order.builder()
                 .vendor(vendor)
                 .transDate(LocalDateTime.now())
@@ -73,23 +73,23 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.saveAndFlush(order);
 
         List<OrderDetailResponse> orderDetailResponses = order.getOrderDetails().stream().map(orderDetail -> {
-            // TODO 5: Set order from orderDetail after creating new order
+            // TODO : Set order from orderDetail after creating new order
             orderDetail.setOrder(order);
 
-            // TODO 6: Change the stock from the purchased quantity
+            // TODO : Change the stock from the purchased quantity
             ProductPrice currentProductPrice = orderDetail.getProductPrice();
             currentProductPrice.setStock(currentProductPrice.getStock() - orderDetail.getQuantity());
 
             return OrderDetailResponse.builder()
                     .orderDetailId(orderDetail.getId())
                     .quantity(orderDetail.getQuantity())
-                    // TODO 7: Convert product to productResponse (from productPrice)
+                    // TODO : Convert product to productResponse (from productPrice)
                     .product(ProductResponse.builder()
                             .id(currentProductPrice.getProduct().getId())
                             .productName(currentProductPrice.getProduct().getName())
                             .price(currentProductPrice.getPrice())
                             .stock(currentProductPrice.getStock())
-                            // TODO 8: Convert vendor to vendorResponse (from productPrice)
+                            // TODO : Convert vendor to vendorResponse (from productPrice)
                             .vendorResponse(VendorResponse.builder()
                                     .id(currentProductPrice.getVendor().getId())
                                     .name(currentProductPrice.getVendor().getName())
@@ -99,16 +99,13 @@ public class OrderServiceImpl implements OrderService {
                     .build();
         }).collect(Collectors.toList());
 
-        // TODO 9: Convert vendor to vendorResponse
+        // TODO : Convert vendor to vendorResponse
         VendorResponse vendorResponse = VendorResponse.builder()
                 .id(vendor.getId())
                 .name(vendor.getName())
                 .build();
 
-        // TODO 10: Add Order to Entity Report
-
-
-        // TODO 11: Convert orderDetail to orderDetailResponse
+        // TODO : Convert orderDetail to orderDetailResponse
         return OrderResponse.builder()
                 .orderId(order.getId())
                 .vendorResponse(vendorResponse)
