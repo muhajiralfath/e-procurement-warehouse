@@ -11,7 +11,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class OrderRequest {
 
-    private String customerId;
+    private String vendorId;
     private List<OrderDetailRequest> orderDetails;
 
 }

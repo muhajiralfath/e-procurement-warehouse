@@ -1,15 +1,13 @@
 package com.enigma.procurementwarehouse.service.impl;
 
-import com.enigma.procurementwarehouse.entity.Vendor;
-import com.enigma.procurementwarehouse.entity.Order;
-import com.enigma.procurementwarehouse.entity.OrderDetail;
-import com.enigma.procurementwarehouse.entity.ProductPrice;
+import com.enigma.procurementwarehouse.entity.*;
 import com.enigma.procurementwarehouse.model.request.OrderRequest;
-import com.enigma.procurementwarehouse.model.response.*;
+import com.enigma.procurementwarehouse.model.response.OrderDetailResponse;
+import com.enigma.procurementwarehouse.model.response.OrderResponse;
+import com.enigma.procurementwarehouse.model.response.ProductResponse;
+import com.enigma.procurementwarehouse.model.response.VendorResponse;
 import com.enigma.procurementwarehouse.repository.OrderRepository;
-import com.enigma.procurementwarehouse.service.VendorService;
-import com.enigma.procurementwarehouse.service.OrderService;
-import com.enigma.procurementwarehouse.service.ProductPriceService;
+import com.enigma.procurementwarehouse.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -30,17 +28,35 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final VendorService vendorService;
     private final ProductPriceService productPriceService;
+    private final ProductService productService;
+    private final ReportDataService reportDataService;
+
 
     @Transactional(rollbackOn = Exception.class)
     @Override
     public OrderResponse createNewTransaction(OrderRequest request) {
         // TODO 1: Validate vendor
-        Vendor vendor = vendorService.getById(request.getCustomerId());
+        Vendor vendor = vendorService.getById(request.getVendorId());
 
         // TODO 2: Convert orderDetailRequest to orderDetail
         List<OrderDetail> orderDetails = request.getOrderDetails().stream().map(orderDetailRequest -> {
             // TODO 3: Validate Product Price
             ProductPrice productPrice = productPriceService.getById(orderDetailRequest.getProductPriceId());
+            Product product = productService.getProductById(productPrice.getProduct().getId());
+
+            // TODO : Add Order to Report Data
+            ReportData report = ReportData.builder()
+                    .productCode(product.getProductCode())
+                    .date(LocalDateTime.now())
+                    .vendorName(vendor.getName())
+                    .productName(product.getName())
+                    .category(product.getCategory().getName())
+                    .price(productPrice.getPrice())
+                    .quantity(orderDetailRequest.getQuantity())
+                    .totalPrice(productPrice.getPrice() * orderDetailRequest.getQuantity())
+                    .build();
+
+            reportDataService.create(report);
 
             return OrderDetail.builder()
                     .productPrice(productPrice)
@@ -73,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
                             .productName(currentProductPrice.getProduct().getName())
                             .price(currentProductPrice.getPrice())
                             .stock(currentProductPrice.getStock())
-                            // TODO 8: Convert Store to storeResponse (from productPrice)
+                            // TODO 8: Convert vendor to vendorResponse (from productPrice)
                             .vendorResponse(VendorResponse.builder()
                                     .id(currentProductPrice.getVendor().getId())
                                     .name(currentProductPrice.getVendor().getName())
@@ -89,7 +105,10 @@ public class OrderServiceImpl implements OrderService {
                 .name(vendor.getName())
                 .build();
 
-        // TODO 10: Convert orderDetail to orderDetailResponse
+        // TODO 10: Add Order to Entity Report
+
+
+        // TODO 11: Convert orderDetail to orderDetailResponse
         return OrderResponse.builder()
                 .orderId(order.getId())
                 .vendorResponse(vendorResponse)

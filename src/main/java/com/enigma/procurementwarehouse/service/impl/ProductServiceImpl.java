@@ -77,6 +77,11 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
+    @Override
+    public Product getProductById(String id) {
+       return productRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "product not found"));
+    }
+
     @Transactional(rollbackOn = Exception.class)
     @Override
     public List<ProductResponse> createBulk(List<ProductRequest> productRequests) {
