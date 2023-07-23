@@ -9,6 +9,7 @@ import com.enigma.procurementwarehouse.model.response.VendorResponse;
 import com.enigma.procurementwarehouse.repository.OrderRepository;
 import com.enigma.procurementwarehouse.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
         // TODO : Convert orderDetailRequest to orderDetail
         List<OrderDetail> orderDetails = request.getOrderDetails().stream().map(orderDetailRequest -> {
-            // TODO 3: Validate Product Price
+            // TODO : Validate Product Price
             ProductPrice productPrice = productPriceService.getById(orderDetailRequest.getProductPriceId());
             Product product = productService.getProductById(productPrice.getProduct().getId());
 
@@ -65,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
         }).collect(Collectors.toList());
 
         // TODO : Create new order
+
         Order order = Order.builder()
                 .vendor(vendor)
                 .transDate(LocalDateTime.now())
@@ -72,13 +74,20 @@ public class OrderServiceImpl implements OrderService {
                 .build();
         orderRepository.saveAndFlush(order);
 
+
         List<OrderDetailResponse> orderDetailResponses = order.getOrderDetails().stream().map(orderDetail -> {
             // TODO : Set order from orderDetail after creating new order
             orderDetail.setOrder(order);
 
             // TODO : Change the stock from the purchased quantity
             ProductPrice currentProductPrice = orderDetail.getProductPrice();
-            currentProductPrice.setStock(currentProductPrice.getStock() - orderDetail.getQuantity());
+
+            // TODO : Error if Less Stock
+            try {
+                currentProductPrice.setStock(currentProductPrice.getStock() - orderDetail.getQuantity());
+            } catch (DataIntegrityViolationException exception) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Order not valid, less stock product");
+            }
 
             return OrderDetailResponse.builder()
                     .orderDetailId(orderDetail.getId())
@@ -87,6 +96,7 @@ public class OrderServiceImpl implements OrderService {
                     .product(ProductResponse.builder()
                             .id(currentProductPrice.getProduct().getId())
                             .productName(currentProductPrice.getProduct().getName())
+                            .category(currentProductPrice.getProduct().getCategory().getName())
                             .price(currentProductPrice.getPrice())
                             .stock(currentProductPrice.getStock())
                             // TODO : Convert vendor to vendorResponse (from productPrice)
@@ -94,7 +104,9 @@ public class OrderServiceImpl implements OrderService {
                                     .id(currentProductPrice.getVendor().getId())
                                     .name(currentProductPrice.getVendor().getName())
                                     .address(currentProductPrice.getVendor().getAddress())
+                                    .phone(currentProductPrice.getVendor().getPhone())
                                     .build())
+
                             .build())
                     .build();
         }).collect(Collectors.toList());
@@ -103,6 +115,8 @@ public class OrderServiceImpl implements OrderService {
         VendorResponse vendorResponse = VendorResponse.builder()
                 .id(vendor.getId())
                 .name(vendor.getName())
+                .address(vendor.getAddress())
+                .phone(vendor.getPhone())
                 .build();
 
         // TODO : Convert orderDetail to orderDetailResponse
@@ -112,6 +126,8 @@ public class OrderServiceImpl implements OrderService {
                 .transDate(order.getTransDate())
                 .orderDetails(orderDetailResponses)
                 .build();
+
+
     }
 
     @Override
@@ -129,11 +145,13 @@ public class OrderServiceImpl implements OrderService {
                             .id(currentProductPrice.getProduct().getId())
                             .productName(currentProductPrice.getProduct().getName())
                             .price(currentProductPrice.getPrice())
+                            .category(currentProductPrice.getProduct().getCategory().getName())
                             .stock(currentProductPrice.getStock())
                             .vendorResponse(VendorResponse.builder()
                                     .id(currentProductPrice.getVendor().getId())
                                     .name(currentProductPrice.getVendor().getName())
                                     .address(currentProductPrice.getVendor().getAddress())
+                                    .phone(currentProductPrice.getVendor().getPhone())
                                     .build())
                             .build())
                     .build();

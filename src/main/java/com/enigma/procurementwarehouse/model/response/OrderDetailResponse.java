@@ -13,5 +13,4 @@ public class OrderDetailResponse {
     private String orderDetailId;
     private ProductResponse product;
     private Integer quantity;
-    private Long totalPrice;
 }

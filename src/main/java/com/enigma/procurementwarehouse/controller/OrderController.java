@@ -13,11 +13,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/transactions")
+@RequestMapping(path = "/api/v1/orders")
 public class OrderController {
     private final OrderService orderService;
     @PostMapping
-    public ResponseEntity<?> createNewTransaction(@RequestBody OrderRequest request) {
+    public ResponseEntity<?> createNewOrder(@RequestBody OrderRequest request) {
         OrderResponse orderResponse = orderService.createNewTransaction(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonResponse.builder()
@@ -28,7 +28,7 @@ public class OrderController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<?> getTransactionById(@PathVariable String id) {
+    public ResponseEntity<?> getOrderById(@PathVariable String id) {
         OrderResponse order = orderService.getOrderById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.builder()
@@ -39,7 +39,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getTransactions(@RequestParam(name = "vendorName", required = false) String verdorName) {
+    public ResponseEntity<?> getAllOrder(@RequestParam(name = "vendorName", required = false) String verdorName) {
         List<OrderResponse> orderResponses = orderService.getAllTransaction(verdorName);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.builder()
