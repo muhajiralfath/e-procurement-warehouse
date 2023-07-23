@@ -1,4 +1,4 @@
-package com.enigma.tokonyadia.service.impl;
+package com.enigma.procurementwarehouse.service.impl;
 
 import com.enigma.procurementwarehouse.entity.Role;
 import com.enigma.procurementwarehouse.entity.constant.ERole;
