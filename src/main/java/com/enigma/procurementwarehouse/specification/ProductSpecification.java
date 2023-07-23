@@ -20,6 +20,7 @@ public class ProductSpecification {
             if (maxPrice != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(productPrices.get("price"), maxPrice));
             }
+            predicates.add(criteriaBuilder.isFalse(root.get("isDeleted")));
 
             return query.where(predicates.toArray(new Predicate[]{})).getRestriction();
         };

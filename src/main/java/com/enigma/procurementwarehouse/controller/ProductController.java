@@ -37,7 +37,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonResponse.<List<ProductResponse>>builder()
                         .statusCode(HttpStatus.CREATED.value())
-                        .message("Successfully create bulk customer")
+                        .message("Successfully create bulk product")
                         .data(productResponses)
                         .build());
     }
@@ -48,7 +48,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("Successfully get customer")
+                        .message("Successfully get product")
                         .data(productResponse)
                         .build());
     }
@@ -68,7 +68,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("Successfully get all customer")
+                        .message("Successfully get all product")
                         .data(productResponses.getContent())
                         .paging(pagingResponse)
                         .build());
@@ -80,27 +80,28 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.<ProductResponse>builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("Successfully update customer")
+                        .message("Successfully update product")
                         .data(productResponse)
                         .build());
     }
 
-    @DeleteMapping(path = "/softDelete/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<?> softDeleteById(@PathVariable(name = "id") String id) {
         productService.softDelete(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.<String>builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("Successfully delete customer")
+                        .message("Successfully delete product")
                         .build());
     }
+
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> hardDeleteById(@PathVariable(name = "id") String id) {
         productService.hardDelete(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CommonResponse.<String>builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("Successfully delete customer")
+                        .message("Successfully hard delete product")
                         .build());
     }
 }
