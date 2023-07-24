@@ -24,7 +24,20 @@ public class AuthController {
         RegisterResponse register = authService.registerAdmin(request);
         CommonResponse<Object> commonResponse = CommonResponse.builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("successfully registered")
+                .message("successfully registered admin")
+                .data(register)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commonResponse);
+    }
+
+    @PostMapping(path = "/register-super-admin")
+    public ResponseEntity<?> registerSuperAdmin(@RequestBody AuthRequest request) {
+        RegisterResponse register = authService.registerSuperAdmin(request);
+        CommonResponse<Object> commonResponse = CommonResponse.builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .message("successfully registered super admin")
                 .data(register)
                 .build();
 
