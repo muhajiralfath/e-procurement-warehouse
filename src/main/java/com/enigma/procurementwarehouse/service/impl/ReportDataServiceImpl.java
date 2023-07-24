@@ -1,6 +1,7 @@
 package com.enigma.procurementwarehouse.service.impl;
 
 import com.enigma.procurementwarehouse.entity.ReportData;
+import com.enigma.procurementwarehouse.model.response.ReportDataResponse;
 import com.enigma.procurementwarehouse.repository.ReportDataRepository;
 import com.enigma.procurementwarehouse.service.ReportDataService;
 import com.enigma.procurementwarehouse.specification.ReportDataSepecMonthly;
@@ -19,6 +20,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,12 +51,28 @@ public class ReportDataServiceImpl implements ReportDataService {
 
     @Override
     public void writeReportDataToCsv(Writer writer, String date, Integer month, Integer year) {
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         List<ReportData> reportDataList = reportDataRepository.findAll();
+        List<ReportDataResponse> dataResponseList = new ArrayList<>();
+        for (ReportData reportData : reportDataList) {
+            ReportDataResponse response = ReportDataResponse.builder()
+                    .id(reportData.getId())
+                    .productCode(reportData.getProductCode())
+                    .date(reportData.getDate().format(formatter))
+                    .vendorName(reportData.getVendorName())
+                    .productName(reportData.getProductName())
+                    .category(reportData.getCategory())
+                    .price(reportData.getPrice())
+                    .quantity(reportData.getQuantity())
+                    .totalPrice(reportData.getTotalPrice())
+                    .build();
+            dataResponseList.add(response);
+        }
+
         try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
             csvPrinter.printRecord("KODE BARANG", "TANGGAL", "NAMA VENDOR","NAMA BARANG","KATEGORI", "HARGA BARANG", "QTY", "JUMLAH");
-            for (ReportData data : reportDataList) {
-                csvPrinter.printRecord(data.getProductCode(), data.getDate(), data.getVendorName(), data.getProductName(), data.getCategory(), data.getPrice(), data.getQuantity(), data.getTotalPrice());
+            for (ReportDataResponse data : dataResponseList) {
+                csvPrinter.printRecord(data.getProductCode(), data.getDate(), data.getVendorName(), data.getDate(), data.getCategory(), data.getPrice(), data.getQuantity(), data.getTotalPrice());
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
