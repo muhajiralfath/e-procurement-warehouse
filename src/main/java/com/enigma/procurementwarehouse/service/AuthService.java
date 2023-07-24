@@ -7,5 +7,7 @@ import com.enigma.procurementwarehouse.model.response.RegisterResponse;
 public interface AuthService {
 
     RegisterResponse registerAdmin(AuthRequest request);
+
+    RegisterResponse registerSuperAdmin(AuthRequest request);
     LoginResponse login(AuthRequest request);
 }
